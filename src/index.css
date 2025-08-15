@@ -10,8 +10,8 @@
   --font-family-base: 'Inter', sans-serif;
 
   /* Container */
-  --container-width: 1280px;
-  --container-padding: 1rem;
+  --container-width: 1920px;
+  --container-padding: 16px;
 
   /* Font sizes */
   --font-size-base: 16px;
