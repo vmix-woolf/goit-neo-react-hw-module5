@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
-import MovieList from '../components/MovieList/MovieList'
-import SearchForm from '../components/SearchForm/SearchForm'
+import MovieList from '../../components/MovieList/MovieList.jsx'
+import SearchForm from '../../components/SearchForm/SearchForm.jsx'
+import styles from './MoviesPage.module.css'
 
 export default function MoviesPage() {
     const [movies, setMovies] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-
     const [searchParams, setSearchParams] = useSearchParams()
     const query = searchParams.get('query') ?? ''
 
@@ -18,21 +18,19 @@ export default function MoviesPage() {
         const fetchMovies = async () => {
             setLoading(true)
             setError(null)
-
             try {
                 const options = {
                     headers: {
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNjZiMGY5YzZjYWJhNmM3OTViMTE4NjE2MDU4NWFhMSIsIm5iZiI6MTc1NTI3MTM1Ny45NCwic3ViIjoiNjg5ZjUwYmQ5OTNhNWU5Nzc3MjY5N2VkIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.IX9fIlVzNuwzLwIRa6OR8abprNFtJtxZS7SjNFzpUnw'
+                        Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
                     }
                 }
-                const response = await axios.get(
+                const resp = await axios.get(
                     `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
                     options
                 )
-                setMovies(response.data.results)
-                // eslint-disable-next-line no-unused-vars
-            } catch (err) {
-                setError('Failed to fetch movies')
+                setMovies(resp.data.results)
+            } catch {
+                setError('Не вдалося виконати пошук фільмів')
             } finally {
                 setLoading(false)
             }
@@ -41,14 +39,16 @@ export default function MoviesPage() {
         fetchMovies()
     }, [query])
 
-    const handleSearchSubmit = value => {
+    const handleSubmit = value => {
         setSearchParams({ query: value })
     }
 
     return (
-        <main>
-            <h1>Search Movies</h1>
-            <SearchForm onSubmit={handleSearchSubmit} />
+        <main className={styles.wrapper}>
+            <h1 className={styles.title}>Search Movies</h1>
+            <div className={styles.form}>
+                <SearchForm onSubmit={handleSubmit} />
+            </div>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
             {movies.length > 0 && <MovieList movies={movies} />}
