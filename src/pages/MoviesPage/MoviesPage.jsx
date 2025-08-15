@@ -21,7 +21,7 @@ export default function MoviesPage() {
             try {
                 const options = {
                     headers: {
-                        Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+                        Authorization: import.meta.env.VITE_TMDB_TOKEN}
                     }
                 }
                 const resp = await axios.get(
