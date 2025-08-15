@@ -21,15 +21,17 @@ export default function MoviesPage() {
             try {
                 const options = {
                     headers: {
-                        Authorization: import.meta.env.VITE_TMDB_TOKEN
-                    }
+                        Authorization: import.meta.env.VITE_TMDB_TOKEN,
+                    },
                 }
+
                 const resp = await axios.get(
                     `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
                     options
                 )
                 setMovies(resp.data.results)
-            } catch {
+                // eslint-disable-next-line no-unused-vars
+            } catch (err) {
                 setError('Не вдалося виконати пошук фільмів')
             } finally {
                 setLoading(false)
